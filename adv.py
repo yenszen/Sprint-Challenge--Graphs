@@ -10,8 +10,8 @@ world = World()
 
 
 # You may uncomment the smaller graphs for development and testing purposes.
-map_file = "maps/test_line.txt"
-# map_file = "maps/test_cross.txt"
+# map_file = "maps/test_line.txt"
+map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
 # map_file = "maps/main_maze.txt"
@@ -29,31 +29,13 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
-# print(f"line 48: {player.current_room.id}")
-# print(f"line 49: {player.current_room.get_exits()}")
-# print(f"line 50: {player.travel(traversal_path[0])}")
-
-def bfs(self, starting_vertex):
-        visited = set()
-        queue = deque()
-        queue.append([starting_vertex])
-
-        while len(queue) > 0:
-            current_path = queue.popleft()
-            current_node = current_path[-1]
-
-            if current_node == "?":
-                return current_path
-            
-            if current_node not in visited:
-                visited.add(current_node)
-                for neighbor in player.current_room.get_exits():
-                    new_path = list(current_path)
-                    new_path.append(neighbor)
-                    queue.append(new_path)
-
-
 graph = {}
+opposites = {
+    "n": "s",
+    "s": "n",
+    "e": "w",
+    "w": "e"
+}
 stack = deque()
 stack.append(player.current_room.id)
 
