@@ -11,10 +11,10 @@ world = World()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
-map_file = "maps/test_cross.txt"
+# map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -29,37 +29,27 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
-graph = {}
-opposites = {
-    "n": "s",
-    "s": "n",
-    "e": "w",
-    "w": "e"
-}
-stack = deque()
-stack.append(player.current_room.id)
+visited = {}
+reverse = []
+opposite_direction = {'n':'s', 's':'n', 'w': 'e', 'e':'w'}
 
-while len(stack) > 0:
-    current_loc = stack.pop()
-    if current_loc not in graph:
-        graph[current_loc] = {}
-        for path in player.current_room.get_exits():
-            graph[current_loc][path] = "?"
+visited[player.current_room.id] = player.current_room.get_exits()
 
-    for k, v in graph[current_loc].items():
-        if v == "?":
-            player.travel(k)
-            traversal_path.append(k)
-            graph[current_loc][k] = player.current_room.id
-            if player.current_room.id not in graph:
-                stack.append(player.current_room.id)
-                break
-            else:
-                continue
+while len(visited) < len(room_graph) - 1:
+    if player.current_room.id not in visited:
+        visited[player.current_room.id] = player.current_room.get_exits()
+        previous_direction = reverse[-1]
+        visited[player.current_room.id].remove(previous_direction)
 
+    while len(visited[player.current_room.id]) < 1:
+        reverse_direction = reverse.pop()
+        traversal_path.append(reverse_direction)
+        player.travel(reverse_direction)
 
-print(traversal_path)
-print(graph)
+    find_exit = visited[player.current_room.id].pop(0)
+    traversal_path.append(find_exit)
+    reverse.append(opposite_direction[find_exit])
+    player.travel(find_exit)
 
 
 # TRAVERSAL TEST - DO NOT MODIFY
